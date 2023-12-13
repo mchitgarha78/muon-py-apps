@@ -13,7 +13,7 @@ class MuonUtils:
     @staticmethod
     def call_method(script_file: str, method_name: str, *args, **kwargs) -> None:
         try:
-            module = importlib.import_module(script_file)
+            module = importlib.import_module(script_file, package='muon-apps')
             method_to_call = getattr(module, method_name)
             return method_to_call(*args, **kwargs)
         except ModuleNotFoundError:
@@ -45,5 +45,11 @@ class MuonUtils:
         random.seed(seed)  
         random_subset = random.sample(list, subset_size)
         return random_subset
+    
+    
+    # TODO: Implement verification of deployment signature
+    @staticmethod 
+    def verify_deployment_signature(signature: str, message: str):
+        return True
     
 
