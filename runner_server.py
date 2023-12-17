@@ -16,8 +16,6 @@ def handler():
         method = data.get('method')
         req_id = data.get('reqId')
         params = data.get('data', {}).get('params')
-        result = data.get('data', {}).get('result')
-        sign_params = data.get('data', {}).get('signParams')
         
         if None in [app_name, method, req_id, params]:
             return jsonify({'error': 'Invalid request format'}), 400
@@ -32,16 +30,15 @@ def handler():
         
         response_data['signParams'] = MuonUtils.call_method(f'.{app_name}', 'sign_params'
                                                                  , data, response_data['result'])
-        response_data['signParams'].insert(0, { 'name': "appId", 'type': "uint256", 'value': app_id })
-        response_data['signParams'].insert(1, { 'name': "reqId", 'type': "uint256", 'value': req_id })
+        response_data['signParams'].insert(0, { 'name': 'appId', 'type': 'uint256', 'value': app_id })
+        response_data['signParams'].insert(1, { 'name': 'reqId', 'type': 'uint256', 'value': req_id })
         response_data['hash'] = MuonUtils.hash_json(response_data['signParams'])
 
         return jsonify(response_data), 200
     except Exception as e:
         logging.error(f'Flask request_sign => Exception occurred: {type(e).__name__}: {e}')
-        return jsonify({'error': f'Server error: {e}'}), 500
+        return jsonify({'error': f'{e}'}), 500
 
 if __name__ == '__main__':
     # TODO: use uvicorn or WSGI
-    sys.argv[0]
-    app.run(port = 6000, debug = True, use_reloader = False)
+    app.run(port = sys.argv[1], debug = True, use_reloader = False)

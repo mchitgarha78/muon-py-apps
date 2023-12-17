@@ -29,8 +29,8 @@ def sign_params(request, result):
             raise Exception('Invalid price')
         
         return [
-            {'type': "uint256", 'value': result['app_id'] },
-            {'type': "string" , 'value': params['app_name'] }
+            {'type': 'uint256', 'value': result['app_id'] },
+            {'type': 'string' , 'value': params['app_name'] }
         ]
     else:
         raise Exception(f'Unknown method {method}')

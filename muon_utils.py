@@ -17,15 +17,11 @@ class MuonUtils:
             method_to_call = getattr(module, method_name)
             return method_to_call(*args, **kwargs)
         except ModuleNotFoundError:
-            logging.error(f"Error: {script_file} not found")
-            return None
+            raise Exception(f'Error: {script_file} not found')
         except AttributeError:
-            logging.error(
-                f"Error: {method_name} not found in {script_file}")
-            return None
+            raise Exception(f'Error: {method_name} not found in {script_file}')
         except Exception as e:
-            logging.error(f"Unhandled error: {e}")
-            return None
+            raise Exception(f'{e}')
         
     @staticmethod
     def get_app_id(name):
