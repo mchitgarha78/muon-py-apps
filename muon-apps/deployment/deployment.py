@@ -49,7 +49,7 @@ def on_request(request: Dict):
 
         dkg_data: Dict = params.get('dkg_data')
         threshold = params.get('threshold')
-        verified_peer_ids = []
+        verified_party = []
         validation_items = {}
         for id, public_share in dkg_data['public_shares'].items():
             validation_items[id] = {}
@@ -65,14 +65,13 @@ def on_request(request: Dict):
                     public_key_bytes = bytes.fromhex(result['public_key'])
                     break
             public_key = Secp256k1PublicKey.deserialize(public_key_bytes)
-
             # TODO: Fix validation:
-            if public_key.verify(data_bytes, validation) or True:
-                verified_peer_ids.append(selected_nodes[id])
+            if public_key.verify(data_bytes, validation):
+                verified_party.append(selected_nodes[id])
 
-        if len(verified_peer_ids) >= threshold:
+        if len(verified_party) >= threshold:
             return {
-                'verified_peer_ids': verified_peer_ids,
+                'verified_party': verified_party,
                 'app_id': app_id
             }
 
@@ -96,8 +95,6 @@ def sign_params(request, result):
             {'type': 'uint256', 'value': result['app_id']},
             {'type': 'uint256', 'value': params['timestamp']},
             {'type': 'uint32', 'value': params['dkg_data']['public_key']},
-            {'type': 'string', 'value': json.dumps(
-                result['verified_peer_ids'])}
         ]
     else:
         raise Exception(f'Unknown method {method}')
