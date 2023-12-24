@@ -32,7 +32,6 @@ def handler():
         response_data['signParams'].insert(0, { 'name': 'appId', 'type': 'uint256', 'value': app_id })
         response_data['signParams'].insert(1, { 'name': 'reqId', 'type': 'uint256', 'value': req_id })
         response_data['hash'] = MuonUtils.hash_json(response_data['signParams'])
-
         return jsonify(response_data), 200
     except Exception as e:
         logging.error(f'Flask request_sign => Exception occurred: {type(e).__name__}: {e}')

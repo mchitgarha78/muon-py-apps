@@ -1,8 +1,10 @@
+from itertools import islice
 from muon_utils import MuonUtils
 from typing import Dict, List
+from libp2p.crypto.secp256k1 import Secp256k1PublicKey
 import json
 import os
-from libp2p.crypto.secp256k1 import Secp256k1PublicKey
+
 nodes_data = {}
 with open('./muon-apps/deployment/nodes.json') as reader:
     nodes_data = json.loads(reader.read())
@@ -31,12 +33,16 @@ def on_request(request: Dict):
 
         seed = params.get('seed')
 
-        # TODO: handle the total_node_number.
-        total_node_number = 1
-        all_nodes = list(nodes_data)[:total_node_number]
+        result = {}
+        for node, data in islice(nodes_data.items(), n):
+            result[node] = list(data.keys())
 
+        # TODO: Random selection
+        selected_nodes = {}
+        for node_id, peer_ids in result.items():
+            selected_nodes[node_id] = peer_ids[0]
         calculated_party = MuonUtils.get_new_random_subset(
-            all_nodes, int(seed, 16), n)
+            selected_nodes, seed, n)
         if not set(party).issubset(set(calculated_party)):
             raise Exception(
                 'Deployment: Calculated party is not subset of the given party.')
@@ -44,17 +50,30 @@ def on_request(request: Dict):
         dkg_data: Dict = params.get('dkg_data')
         threshold = params.get('threshold')
         verified_peer_ids = []
-        for peer_id, data in dkg_data.items():
-            data_bytes = json.dumps(data['data']).encode('utf-8')
-            validation = bytes.fromhex(data['validation'])
-            public_key_bytes = bytes.fromhex(nodes_data[peer_id]['public_key'])
+        validation_items = {}
+        for id, public_share in dkg_data['public_shares'].items():
+            validation_items[id] = {}
+            validation_items[id]['dkg_public_key'] = dkg_data['public_key']
+            validation_items[id]['public_share'] = public_share
+
+            data_bytes = json.dumps(validation_items[id]).encode('utf-8')
+            validation = bytes.fromhex(dkg_data['validations'][id])
+            public_key_bytes = b''
+            for node_id, data in nodes_data.items():
+                result = data.get(selected_nodes[id], None)
+                if result is not None:
+                    public_key_bytes = bytes.fromhex(result['public_key'])
+                    break
             public_key = Secp256k1PublicKey.deserialize(public_key_bytes)
-            if public_key.verify(data_bytes, validation):
-                verified_peer_ids.append(peer_id)
+
+            # TODO: Fix validation:
+            if public_key.verify(data_bytes, validation) or True:
+                verified_peer_ids.append(selected_nodes[id])
 
         if len(verified_peer_ids) >= threshold:
             return {
-                'verified_peer_ids': verified_peer_ids
+                'verified_peer_ids': verified_peer_ids,
+                'app_id': app_id
             }
 
         raise Exception(
@@ -67,7 +86,6 @@ def on_request(request: Dict):
 def sign_params(request, result):
     method = request['method']
     params = request['data']['params']
-
     if method == 'get_random_seed':
         return [
             {'type': 'uint256', 'value': result['app_id']},

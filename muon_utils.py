@@ -4,7 +4,7 @@ from web3.auto import w3
 import hashlib
 import json
 import random
-from typing import List
+from typing import List, Dict
 
 
 class MuonUtils:
@@ -13,17 +13,10 @@ class MuonUtils:
 
     @staticmethod
     def call_method(script_file: str, method_name: str, *args, **kwargs) -> None:
-        try:
-            module = importlib.import_module(
-                f'.{script_file}.{script_file}', package='muon-apps')
-            method_to_call = getattr(module, method_name)
-            return method_to_call(*args, **kwargs)
-        except ModuleNotFoundError:
-            raise Exception(f'Error: {script_file} not found')
-        except AttributeError:
-            raise Exception(f'Error: {method_name} not found in {script_file}')
-        except Exception as e:
-            raise Exception(f'{e}')
+        module = importlib.import_module(
+            f'.{script_file}.{script_file}', package='muon-apps')
+        method_to_call = getattr(module, method_name)
+        return method_to_call(*args, **kwargs)
 
     @staticmethod
     def get_app_id(name):
@@ -39,7 +32,8 @@ class MuonUtils:
         return hash_hex
 
     @staticmethod
-    def get_new_random_subset(list: List, seed: int, subset_size: int) -> None:
+    def get_new_random_subset(dictionary: Dict, seed: int, subset_size: int) -> None:
         random.seed(seed)
-        random_subset = random.sample(list, subset_size)
-        return random_subset
+        items = list(dictionary.items())
+        random_subset = random.sample(items, subset_size)
+        return dict(random_subset)
