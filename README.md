@@ -26,4 +26,11 @@ For any instance of Muon node, you should run an instance of runner app with spe
 
 ```
 
+If you want to test the `simple_oracle`, you can test the runner server using this command:
+```bash
+(venv) $ curl -X POST -H "Content-Type: application/json" -d '{"app": "simple_oracle", "method": "price", "reqId": "12345", "data": {"params": {"unit": "USD", "token": "BNB"}, "result": {"price":267},"signParams":[{"name":"appId","type":"uint256","value":"55248038324285368712633359989377918216711324138169494581107010692219814301235"},{"name":"reqId","type":"uint256","value":"12345"},{"type":"uint32","value":227},{"type":"string","value":"BNB"},{"type":"string","value":"USD"}],"hash":"0x7e92cff17408096d2fa9c73b7a818a1c51f0eeeab5a91c19d60cf8395a5a6c53"}}' http://localhost:6000/v1/
+
+```
+
+
 
