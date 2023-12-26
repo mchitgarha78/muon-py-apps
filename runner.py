@@ -4,7 +4,7 @@ import os
 from muon_utils import MuonUtils
 from typing import List
 import sys
-
+from dotenv import load_dotenv 
 app = Flask(__name__)
 
 @app.route('/v1/', methods=['POST'])
@@ -38,5 +38,6 @@ def handler():
         return jsonify({'error': f'{e}'}), 500
 
 if __name__ == '__main__':
+    load_dotenv()
     # TODO: use uvicorn or WSGI
-    app.run(port = sys.argv[1], debug = True, use_reloader = False)
+    app.run(port = str(os.getenv('PORT')), debug = True, use_reloader = False)
