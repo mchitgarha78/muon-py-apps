@@ -22,6 +22,14 @@ After these installations, configure `.env` file:
 (venv) $ cp .env.example .env
 ```
 
+You also need to configure your `nodes.json` file for `deployment` app in `muon-apps/deployment` directory:
+
+```bash
+(venv) $ cp ./muon-apps/deployment/nodes.json.example ./muon-apps/deployment/nodes.json
+```
+
+Get your nodes data and add it to `nodes.json` file. 
+
 ## How to Run
 
 For any instance of Muon node, you should run an instance of runner app with specific local port using the following command:

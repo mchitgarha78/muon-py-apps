@@ -22,3 +22,4 @@ logs
 .env
 
 node.db
+nodes.json
