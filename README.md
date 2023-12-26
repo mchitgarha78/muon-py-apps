@@ -17,7 +17,7 @@ $ source venv/bin/activate
 
 **Note:** The required Python version is `3.10`.
 
-After these installations, configure `.env` file. The file `.env.example` has the example of thie environment variables. So, you can type the following command:
+After these installations, configure `.env` file:
 ```bash
 (venv) $ cp .env.example .env
 ```
