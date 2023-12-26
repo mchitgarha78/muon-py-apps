@@ -31,7 +31,9 @@ def sign_params(request, result):
         if (100 * abs(price - sa_price) / price > 0.5):
             raise Exception('Invalid price')
         return [
-            {'type': 'string', 'value': request['app']}
+            {'type': 'uint32', 'value': int(sa_price)},
+            { 'type': 'string', 'value': params['token'] },
+            { 'type': 'string', 'value': params['unit'] },
         ]
     else:
         raise Exception(f'Unknown method {method}')

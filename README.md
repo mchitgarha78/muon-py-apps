@@ -17,12 +17,17 @@ $ source venv/bin/activate
 
 **Note:** The required Python version is `3.10`.
 
+After these installations, configure `.env` file. The file `.env.example` has the example of thie environment variables. So, you can type the following command:
+```bash
+(venv) $ cp .env.example .env
+```
+
 ## How to Run
 
 For any instance of Muon node, you should run an instance of runner app with specific local port using the following command:
 
 ```bash
-(venv) $ python runner_server.py [your port number. e.g. 6000]
+(venv) $ python runner.py
 
 ```
 
