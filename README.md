@@ -1,6 +1,6 @@
 # Muon Runners Py
 
-This is the implementation of Muon apps to interact with Muon nodes. 
+This is the implementation of Muon apps (for the Python apps) to interact with Muon nodes. Along [js apps runner](https://github.com/mchitgarha78/muon-js-apps), these two components form the Muon-App runner that, in turn, along the [Muon-Node](https://github.com/mchitgarha78/muon-node), the (Muon-SA)[https://github.com/mchitgarha78/muon-sa] and the [Muon-Registry](https://github.com/mchitgarha78/muon-registry) represent the Muon network. For more insight on the Muon network, please read our [document](https://github.com/mchitgarha78/muon-node/wiki) describing the main functionalities of the muon system.
 
 
 ## How to Setup
