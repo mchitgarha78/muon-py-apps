@@ -28,8 +28,8 @@ def sign_params(request, result):
         sa_price = request.get('data', {}).get('result', {}).get('price', None)
         if sa_price is None:
             sa_price = price
-        if (100 * abs(price - sa_price) / price > 0.5):
-            raise Exception('Invalid price')
+        # if (100 * abs(price - sa_price) / price > 0.5):
+        #     raise Exception('Invalid price')
         return [
             {'type': 'uint32', 'value': int(sa_price)},
             { 'type': 'string', 'value': params['token'] },
