@@ -27,7 +27,7 @@ def sign_params(request, result):
         price = float(result['price'])
         sa_price = request.get('data', {}).get('result', {}).get('price', None)
         if sa_price is None:
-            sa_price = result['price']
+            sa_price = price
         if (100 * abs(price - sa_price) / price > 0.5):
             raise Exception('Invalid price')
         return [
